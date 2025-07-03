@@ -1,50 +1,53 @@
-# Welcome to your Expo app 👋
+# Mind Games App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A collection of brain-teasing puzzle games built with React Native and Expo.
 
-## Get started
+## Overview
 
-1. Install dependencies
+Mind Games is a mobile app featuring various mental challenges and puzzle games designed to test cognitive abilities and provide daily brain training.
 
-   ```bash
-   npm install
-   ```
+## Features
 
-2. Start the app
+- **Multiple Game Types**: Starting with Wordle, expanding to other mind games
+- **Daily Challenges**: Fresh puzzles to keep your mind sharp
+- **Cross-Platform**: Built with React Native for iOS and Android
+- **Clean UI**: Simple, intuitive interface focused on gameplay
 
-   ```bash
-   npx expo start
-   ```
+## Tech Stack
 
-In the output, you'll find options to open the app in a
+- **Framework**: React Native
+- **Development Platform**: Expo
+- **Target Platforms**: iOS & Android
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Games
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Wordle (Under development)
 
-## Get a fresh project
+### Current
 
-When you're ready, run:
+- Wordle Clone - Guess the 5-letter word in 6 tries
+
+### Planned
+
+- Logic puzzles
+- Word games
+- Memory challenges
+- Number puzzles
+
+## Want to play for free?
+
+ Download the repo, clone it, build it and play. Enjoy!
 
 ```bash
-npm run reset-project
+# Install dependencies
+npm install
+
+# Start development server
+npx expo start
+
+# Run on iOS
+npx expo run:ios
+
+# Run on Android
+npx expo run:android
 ```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
