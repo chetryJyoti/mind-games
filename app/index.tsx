@@ -1,6 +1,9 @@
 import Icon from "@/assets/images/wordle-icon.svg";
+import SubscribeModal from "@/components/SubscribeModal";
 import { Colors } from "@/constants/Colors";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
+import { useRef } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -13,6 +16,10 @@ import {
 export default function Index() {
   const colorScheme = useColorScheme();
   const theme = Colors[colorScheme ?? "light"];
+  const subscribeModalRef = useRef<BottomSheet>(null);
+
+  const handlePresentSubscribeModal = () =>
+    subscribeModalRef.current?.present();
 
   const goToGame = (gameName: string) => {
     if (gameName === "Wordle") {
@@ -22,7 +29,7 @@ export default function Index() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Top Bar */}
+      <SubscribeModal ref={subscribeModalRef} />
       <View style={[styles.topBar, { borderBottomColor: theme.text }]}>
         <Text style={[styles.logo, { color: theme.text }]}>MindGames</Text>
       </View>
@@ -40,6 +47,7 @@ export default function Index() {
             styles.navBtn,
             { borderColor: theme.text, backgroundColor: theme.gameBg },
           ]}
+          onPress={handlePresentSubscribeModal}
         >
           <Text style={[styles.navBtnText, { color: theme.text }]}>
             Subscribe
