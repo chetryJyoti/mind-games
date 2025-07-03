@@ -1,14 +1,19 @@
 import Icon from "@/assets/images/wordle-icon.svg";
+import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import {
   Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 
 export default function Index() {
+  const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme ?? "light"];
+
   const goToGame = (gameName: string) => {
     if (gameName === "Wordle") {
       router.push(`/${gameName.toLowerCase()}`);
@@ -16,17 +21,29 @@ export default function Index() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Top Bar */}
-      <View style={styles.topBar}>
-        <Text style={styles.logo}>MindGames</Text>
+      <View style={[styles.topBar, { borderBottomColor: theme.text }]}>
+        <Text style={[styles.logo, { color: theme.text }]}>MindGames</Text>
       </View>
       <View style={styles.navButtons}>
-        <TouchableOpacity style={styles.navBtn}>
-          <Text style={styles.navBtnText}>Login</Text>
+        <TouchableOpacity
+          style={[
+            styles.navBtn,
+            { borderColor: theme.text, backgroundColor: theme.gameBg },
+          ]}
+        >
+          <Text style={[styles.navBtnText, { color: theme.text }]}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navBtn}>
-          <Text style={styles.navBtnText}>Subscribe</Text>
+        <TouchableOpacity
+          style={[
+            styles.navBtn,
+            { borderColor: theme.text, backgroundColor: theme.gameBg },
+          ]}
+        >
+          <Text style={[styles.navBtnText, { color: theme.text }]}>
+            Subscribe
+          </Text>
         </TouchableOpacity>
       </View>
       {/* Game Grid */}
@@ -36,60 +53,119 @@ export default function Index() {
           style={({ pressed }) => [
             styles.gameItem,
             styles.activeGame,
-            pressed && styles.activeGamePressed,
+            { borderColor: theme.text, backgroundColor: theme.gameBg },
+            pressed && [
+              styles.activeGamePressed,
+              { backgroundColor: theme.gray },
+            ],
           ]}
           onPress={() => goToGame("Wordle")}
         >
           <View style={styles.iconContainer}>
             <Icon width={80} height={80} />
           </View>
-          <Text style={styles.gameLabel}>Wordle</Text>
-          <Text style={styles.subTitle}>
+          <Text style={[styles.gameLabel, { color: theme.text }]}>Wordle</Text>
+          <Text style={[styles.subTitle, { color: theme.text }]}>
             Get 6 chances to guess a 5-letter word.
           </Text>
         </Pressable>
 
         {/* Coming Soon Games */}
-        <Pressable style={styles.gameItem} disabled={true}>
+        <Pressable
+          style={[
+            styles.gameItem,
+            { borderColor: theme.text, backgroundColor: theme.gameBg },
+          ]}
+          disabled={true}
+        >
           <View style={styles.iconContainer}>
-            <View style={styles.placeholderIcon}>
-              <Text style={styles.placeholderText}>9</Text>
+            <View
+              style={[
+                styles.placeholderIcon,
+                { backgroundColor: theme.gameBg, borderColor: theme.text },
+              ]}
+            >
+              <Text style={[styles.placeholderText, { color: theme.text }]}>
+                9
+              </Text>
             </View>
           </View>
-          <Text style={styles.gameLabel}>Sudoku</Text>
-          <Text style={styles.subTitle}>
+          <Text style={[styles.gameLabel, { color: theme.text }]}>Sudoku</Text>
+          <Text style={[styles.subTitle, { color: theme.text }]}>
             Classic number puzzle game to test your logic.
           </Text>
-          <View style={styles.comingSoonBadge}>
-            <Text style={styles.comingSoonText}>Coming Soon</Text>
+          <View
+            style={[styles.comingSoonBadge, { backgroundColor: theme.text }]}
+          >
+            <Text style={[styles.comingSoonText, { color: theme.background }]}>
+              Coming Soon
+            </Text>
           </View>
         </Pressable>
 
-        <Pressable style={styles.gameItem} disabled={true}>
+        <Pressable
+          style={[
+            styles.gameItem,
+            { borderColor: theme.text, backgroundColor: theme.gameBg },
+          ]}
+          disabled={true}
+        >
           <View style={styles.iconContainer}>
-            <View style={styles.placeholderIcon}>
-              <Text style={styles.placeholderText}>2048</Text>
+            <View
+              style={[
+                styles.placeholderIcon,
+                { backgroundColor: theme.gameBg, borderColor: theme.text },
+              ]}
+            >
+              <Text style={[styles.placeholderText, { color: theme.text }]}>
+                2048
+              </Text>
             </View>
           </View>
-          <Text style={styles.gameLabel}>2048</Text>
-          <Text style={styles.subTitle}>
+          <Text style={[styles.gameLabel, { color: theme.text }]}>2048</Text>
+          <Text style={[styles.subTitle, { color: theme.text }]}>
             Slide tiles to reach the 2048 tile.
           </Text>
-          <View style={styles.comingSoonBadge}>
-            <Text style={styles.comingSoonText}>Coming Soon</Text>
+          <View
+            style={[styles.comingSoonBadge, { backgroundColor: theme.text }]}
+          >
+            <Text style={[styles.comingSoonText, { color: theme.background }]}>
+              Coming Soon
+            </Text>
           </View>
         </Pressable>
 
-        <Pressable style={styles.gameItem} disabled={true}>
+        <Pressable
+          style={[
+            styles.gameItem,
+            { borderColor: theme.text, backgroundColor: theme.gameBg },
+          ]}
+          disabled={true}
+        >
           <View style={styles.iconContainer}>
-            <View style={styles.placeholderIcon}>
-              <Text style={styles.placeholderText}>♠</Text>
+            <View
+              style={[
+                styles.placeholderIcon,
+                { backgroundColor: theme.gameBg, borderColor: theme.text },
+              ]}
+            >
+              <Text style={[styles.placeholderText, { color: theme.text }]}>
+                ♠
+              </Text>
             </View>
           </View>
-          <Text style={styles.gameLabel}>Solitaire</Text>
-          <Text style={styles.subTitle}>Classic card game for one player.</Text>
-          <View style={styles.comingSoonBadge}>
-            <Text style={styles.comingSoonText}>Coming Soon</Text>
+          <Text style={[styles.gameLabel, { color: theme.text }]}>
+            Solitaire
+          </Text>
+          <Text style={[styles.subTitle, { color: theme.text }]}>
+            Classic card game for one player.
+          </Text>
+          <View
+            style={[styles.comingSoonBadge, { backgroundColor: theme.text }]}
+          >
+            <Text style={[styles.comingSoonText, { color: theme.background }]}>
+              Coming Soon
+            </Text>
           </View>
         </Pressable>
       </View>
@@ -100,7 +176,6 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
     paddingTop: 50,
     paddingHorizontal: 20,
   },
@@ -109,7 +184,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingBottom: 20,
     borderBottomWidth: 2,
-    borderBottomColor: "#000000",
   },
   navButtons: {
     flexDirection: "row",
@@ -120,20 +194,16 @@ const styles = StyleSheet.create({
   logo: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#000000",
     letterSpacing: 1,
   },
   navBtn: {
     borderWidth: 2,
-    borderColor: "#000000",
     borderRadius: 6,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: "#ffffff",
   },
   navBtnText: {
     fontSize: 14,
-    color: "#000000",
     fontWeight: "600",
     textTransform: "uppercase",
     letterSpacing: 0.5,
@@ -148,11 +218,9 @@ const styles = StyleSheet.create({
   gameItem: {
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#000000",
     borderRadius: 8,
     padding: 20,
     width: 160,
-    backgroundColor: "#ffffff",
     position: "relative",
     opacity: 0.5,
   },
@@ -163,12 +231,11 @@ const styles = StyleSheet.create({
       width: 4,
       height: 4,
     },
-    shadowOpacity: 1,
+    shadowOpacity: 0.3,
     shadowRadius: 0,
     elevation: 8,
   },
   activeGamePressed: {
-    backgroundColor: "#f5f5f5",
     transform: [{ translateX: 2 }, { translateY: 2 }],
     shadowOffset: {
       width: 2,
@@ -182,21 +249,17 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 8,
-    backgroundColor: "#ffffff",
     borderWidth: 2,
-    borderColor: "#000000",
     justifyContent: "center",
     alignItems: "center",
   },
   placeholderText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#000000",
   },
   gameLabel: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#000000",
     marginBottom: 8,
     textTransform: "uppercase",
     letterSpacing: 1,
@@ -204,7 +267,6 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 12,
     textAlign: "center",
-    color: "#000000",
     lineHeight: 16,
     marginBottom: 12,
   },
@@ -212,14 +274,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 8,
     right: 8,
-    backgroundColor: "#000000",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
   },
   comingSoonText: {
     fontSize: 10,
-    color: "#ffffff",
     fontWeight: "600",
     textTransform: "uppercase",
     letterSpacing: 0.5,

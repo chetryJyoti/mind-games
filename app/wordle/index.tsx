@@ -1,26 +1,55 @@
 import Icon from "@/assets/images/wordle-icon.svg";
-import { Link } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Colors } from "@/constants/Colors";
+import { format } from "date-fns";
+import { router } from "expo-router";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 
-export default function Index() {
+export default function WordlePage() {
+  const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme ?? "light"];
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.content}>
         <Icon width={100} height={100} style={styles.icon} />
-        <Text style={styles.title}>Wordle</Text>
-        <Text style={styles.subTitle}>
+        <Text style={[styles.title, { color: theme.text }]}>Wordle</Text>
+        <Text style={[styles.subTitle, { color: theme.text }]}>
           Get 6 chances to guess a 5-letter word.
         </Text>
 
-        <Link href={"/wordle/game"} asChild>
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btnText}>Play</Text>
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity
+          style={[
+            styles.btn,
+            {
+              borderColor: theme.text,
+              backgroundColor: theme.gameBg,
+            },
+          ]}
+          onPress={() => router.push("/wordle/game")}
+        >
+          <Text style={[styles.btnText, { color: theme.text }]}>Play</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Made by JC</Text>
+        <Text
+          style={[styles.footerText, { color: theme.text, fontWeight: "bold" }]}
+        >
+          {format(new Date(), "MMMM d, yyyy")}
+        </Text>
+        <Text style={[styles.footerText, { color: theme.text }]}>
+          {" "}
+          No. 3345
+        </Text>
+        <Text style={[styles.footerText, { color: theme.text }]}>
+          Edited by JC
+        </Text>
       </View>
     </View>
   );
@@ -29,8 +58,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "space-between", // space content + footer
+    justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 50,
     paddingHorizontal: 30,
@@ -56,7 +84,6 @@ const styles = StyleSheet.create({
   },
   btn: {
     borderWidth: 2,
-    borderColor: "#000",
     borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 30,
@@ -65,14 +92,13 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#000",
   },
   footer: {
     alignItems: "center",
     marginTop: 20,
+    gap: 6,
   },
   footerText: {
     fontSize: 16,
-    color: "#000",
   },
 });

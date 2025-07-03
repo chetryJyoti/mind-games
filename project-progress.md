@@ -4,3 +4,5 @@
 - npx expo start:ios
 - svg setup with metro config
 - google fonts setup and date-fns
+- main landing page and wordle page setup
+- dark and light mode setup
