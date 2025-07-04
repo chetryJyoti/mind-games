@@ -6,3 +6,5 @@
 - google fonts setup and date-fns
 - main landing page and wordle page setup
 - dark and light mode setup
+- bottom sheet subscribe 
+- clerk auth setup

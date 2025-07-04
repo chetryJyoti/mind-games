@@ -1,6 +1,7 @@
 import Icon from "@/assets/images/wordle-icon.svg";
 import SubscribeModal from "@/components/SubscribeModal";
 import { Colors } from "@/constants/Colors";
+import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import { useRef } from "react";
@@ -34,14 +35,31 @@ export default function Index() {
         <Text style={[styles.logo, { color: theme.text }]}>MindGames</Text>
       </View>
       <View style={styles.navButtons}>
-        <TouchableOpacity
-          style={[
-            styles.navBtn,
-            { borderColor: theme.text, backgroundColor: theme.gameBg },
-          ]}
-        >
-          <Text style={[styles.navBtnText, { color: theme.text }]}>Login</Text>
-        </TouchableOpacity>
+        <SignedOut>
+          <TouchableOpacity
+            style={[
+              styles.navBtn,
+              { borderColor: theme.text, backgroundColor: theme.gameBg },
+            ]}
+            onPress={() => router.push("/sign-in")}
+          >
+            <Text style={[styles.navBtnText, { color: theme.text }]}>
+              Login
+            </Text>
+          </TouchableOpacity>
+        </SignedOut>
+        <SignedIn>
+          <TouchableOpacity
+            style={[
+              styles.navBtn,
+              { borderColor: theme.text, backgroundColor: theme.gameBg },
+            ]}
+          >
+            <Text style={[styles.navBtnText, { color: theme.text }]}>
+              Log out
+            </Text>
+          </TouchableOpacity>
+        </SignedIn>
         <TouchableOpacity
           style={[
             styles.navBtn,

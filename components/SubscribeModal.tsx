@@ -64,7 +64,7 @@ const SubscribeModal = forwardRef<Ref>((props, ref) => {
         style={[styles.contentContainer, { backgroundColor: theme.background }]}
       >
         <View style={styles.modalBtns}>
-          <Link href={"/login"} asChild>
+          <Link href="/(auth)/sign-in" asChild>
             <TouchableOpacity>
               <Text style={[styles.textBtn, { color: theme.text }]}>
                 LOG IN
@@ -72,7 +72,7 @@ const SubscribeModal = forwardRef<Ref>((props, ref) => {
             </TouchableOpacity>
           </Link>
           <TouchableOpacity onPress={() => dismiss()}>
-            <Ionicons name="close" size={28} color={theme.gray} />
+            <Ionicons name="close" size={28} color={theme.text} />
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1 }}>
