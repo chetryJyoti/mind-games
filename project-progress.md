@@ -9,3 +9,4 @@
 - bottom sheet subscribe 
 - clerk auth setup
 - on screen keyboard setup
+- game logic with target and all words

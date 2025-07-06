@@ -5,8 +5,8 @@ export const DARK = "#787c7e";
 export const Colors = {
   light: {
     text: "#000",
-    background: "#fff", // Changed from '#DCDCDA' to '#fff'
-    gray: "#f5f5f5", // Lighter gray for light theme
+    background: "#fff",
+    gray: "#A9A9A9",
     green: GREEN,
     yellow: YELLOW,
     dark: DARK,

@@ -1,8 +1,9 @@
 import OnScreenKeyboard from "@/components/OnScreenKeyboard";
 import { Colors } from "@/constants/Colors";
+import { allWords } from "@/utils/allWords";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack } from "expo-router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { StyleSheet, Text, useColorScheme, View } from "react-native";
 
 const ROWS = 6;
@@ -17,18 +18,119 @@ const Game = () => {
     new Array(ROWS).fill(new Array(5).fill(""))
   );
   const [currentRow, setCurrentRow] = useState(0);
-  const [currentColumn, setCurrentColumn] = useState(0);
+  const [currentColumn, _setCurrentColumn] = useState(0);
 
   const [greenLetters, setGreenLetters] = useState<string[]>([]);
   const [yellowLetters, setYellowLetters] = useState<string[]>([]);
   const [grayLetters, setGrayLetters] = useState<string[]>([]);
 
-  const addKey = (key: string) => {
-    console.log(`Adding key: ${key}`);
-    // todo
+  // const [word, setWord] = useState<string>(words[Math.floor(Math.random() * words.length)]);
+  const [word, setWord] = useState<string>("apple"); // For testing, set a fixed word
+
+  const wordLetters = word.split("");
+  // array of all letters in the word
+
+  const columnStateRef = useRef(currentColumn);
+
+  const setCurrentColumn = (value: number) => {
+    columnStateRef.current = value;
+    _setCurrentColumn(value);
   };
 
-  console.log(rows);
+  const addKey = (key: string) => {
+    console.log(`Adding key: ${key}`);
+
+    const newRows = [...rows].map((row) => [...row]); // Create a copy of the rows
+
+    if (key === "ENTER") {
+      checkWord();
+    } else if (key === "BACKSPACE") {
+      if (columnStateRef.current === 0) {
+        newRows[currentRow][0] = "";
+        setRows(newRows);
+        return;
+      }
+      newRows[currentRow][columnStateRef.current - 1] = "";
+      setCurrentColumn(columnStateRef.current - 1);
+      setRows(newRows);
+      return;
+    } else if (columnStateRef.current >= newRows[currentRow].length) {
+      return;
+    } else {
+      newRows[currentRow][columnStateRef.current] = key;
+      setRows(newRows);
+      setCurrentColumn(columnStateRef.current + 1);
+    }
+  };
+
+  const checkWord = () => {
+    const currentWord = rows[currentRow].join("");
+    console.log(`Checking word: ${rows[currentRow].join("")}`);
+    if (currentWord.length < word.length) {
+      console.log("Not enough letters to check the word.");
+      //todo
+      return;
+    }
+    if (!allWords.includes(currentWord)) {
+      console.log("Word not found in the dictionary.");
+      //todo
+      // return;
+    }
+
+    const newGreenLetters: string[] = [];
+    const newYellowLetters: string[] = [];
+    const newGrayLetters: string[] = [];
+
+    currentWord.split("").forEach((letter, index) => {
+      if (letter === wordLetters[index]) {
+        newGreenLetters.push(letter);
+      } else if (wordLetters.includes(letter)) {
+        newYellowLetters.push(letter);
+      } else {
+        newGrayLetters.push(letter);
+      }
+    });
+
+    setGreenLetters([...greenLetters, ...newGreenLetters]);
+    setYellowLetters([...yellowLetters, ...newYellowLetters]);
+    setGrayLetters([...grayLetters, ...newGrayLetters]);
+
+    setTimeout(() => {
+      if (currentWord === word) {
+        console.log("You guessed the word!");
+        // todo: show success message and reset game
+      } else if (currentRow + 1 >= ROWS) {
+        console.log("Game over! You've used all attempts.");
+        // todo: show failure message and reset game
+      }
+    }, 0);
+
+    setCurrentRow(currentRow + 1);
+    setCurrentColumn(0);
+  };
+
+  const getCellColor = (cell: string, rowIndex: number, cellIndex: number) => {
+    if (currentRow > rowIndex) {
+      if (wordLetters[cellIndex] === cell) {
+        return Colors.light.green;
+      } else if (wordLetters.includes(cell)) {
+        return Colors.light.yellow;
+      }
+      return grayColor;
+    }
+    return "transparent";
+  };
+
+  const getBorderColor = (
+    cell: string,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
+    if (currentRow > rowIndex && cell !== "") {
+      return getCellColor(cell, rowIndex, cellIndex);
+    }
+    return Colors.light.gray;
+  };
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
@@ -51,8 +153,24 @@ const Game = () => {
         {rows.map((row, rowIndex) => (
           <View style={styles.gameFieldRow} key={`row-${rowIndex}`}>
             {row.map((cell, cellIndex) => (
-              <View style={styles.cell} key={`cell-${rowIndex}-${cellIndex}`}>
-                <Text style={styles.cellText}>{cell}</Text>
+              <View
+                style={[
+                  styles.cell,
+                  {
+                    backgroundColor: getCellColor(cell, rowIndex, cellIndex),
+                    borderColor: getBorderColor(cell, rowIndex, cellIndex),
+                  },
+                ]}
+                key={`cell-${rowIndex}-${cellIndex}`}
+              >
+                <Text
+                  style={[
+                    styles.cellText,
+                    { color: currentRow > rowIndex ? "#fff" : textColor },
+                  ]}
+                >
+                  {cell}
+                </Text>
               </View>
             ))}
           </View>
@@ -60,9 +178,9 @@ const Game = () => {
       </View>
       <OnScreenKeyboard
         onKeyPressed={addKey}
-        grayLetters={greenLetters}
+        greenLetters={greenLetters}
         yellowLetters={yellowLetters}
-        greenLetters={grayLetters}
+        grayLetters={grayLetters}
       />
     </View>
   );
