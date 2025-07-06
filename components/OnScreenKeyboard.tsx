@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
@@ -46,23 +47,44 @@ const OnScreenKeyboard = ({
             <Pressable
               key={`key-${keyIndex}`}
               onPress={() => onKeyPressed(key)}
-              style={[
+              style={({ pressed }) => [
                 styles.key,
                 { width: keyWidth, height: keyHeight, backgroundColor: "#ddd" },
                 isSpecialKey(key) && { width: keyWidth * 1.5 },
+                {
+                  backgroundColor: greenLetters.includes(key)
+                    ? Colors.light.green
+                    : yellowLetters.includes(key)
+                    ? Colors.light.yellow
+                    : grayLetters.includes(key)
+                    ? Colors.light.gray
+                    : "#ddd",
+                },
+                pressed && { backgroundColor: "#868686" },
               ]}
             >
               <Text
                 style={[
                   styles.keyText,
-                  key === "ENTER" ? { fontSize: 12 } : {},
+                  key === "ENTER" && {
+                    fontSize: 12,
+                    textAlign: "center",
+                    textTransform: "uppercase",
+                  },
+                  isInLetters(key) && {
+                    color: "#fff",
+                  },
                 ]}
               >
                 {isSpecialKey(key) ? (
                   key === ENTER ? (
                     "Enter"
                   ) : (
-                    <Ionicons name="backspace" size={24} />
+                    <Ionicons
+                      name="backspace-outline"
+                      size={24}
+                      color={"black"}
+                    />
                   )
                 ) : (
                   key
