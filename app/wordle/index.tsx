@@ -1,5 +1,6 @@
 import Icon from "@/assets/images/wordle-icon.svg";
 import { Colors } from "@/constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { router } from "expo-router";
 import {
@@ -16,6 +17,16 @@ export default function WordlePage() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.topBar, { borderBottomColor: theme.text }]}>
+        <Ionicons
+          name="arrow-back-outline"
+          size={28}
+          color={theme.text}
+          onPress={() => router.back()}
+        />
+        <Text style={styles.logo}>MindGames</Text>
+        <Text></Text>
+      </View>
       <View style={styles.content}>
         <Icon width={100} height={100} style={styles.icon} />
         <Text style={[styles.title, { color: theme.text }]}>Wordle</Text>
@@ -62,6 +73,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 50,
     paddingHorizontal: 30,
+  },
+  topBar: {
+    width: "100%",
+    paddingBottom: 10,
+    marginBottom: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  logo: {
+    fontSize: 32,
+    fontWeight: "bold",
   },
   content: {
     alignItems: "center",

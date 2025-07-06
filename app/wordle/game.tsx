@@ -14,7 +14,7 @@ const Game = () => {
   const grayColor = Colors[colorScheme ?? "light"].gray;
 
   const [rows, setRows] = useState<string[][]>(
-    new Array(ROWS).fill(new Array(5).fill("s"))
+    new Array(ROWS).fill(new Array(5).fill(""))
   );
   const [currentRow, setCurrentRow] = useState(0);
   const [currentColumn, setCurrentColumn] = useState(0);
@@ -58,7 +58,12 @@ const Game = () => {
           </View>
         ))}
       </View>
-      <OnScreenKeyboard />
+      <OnScreenKeyboard
+        onKeyPressed={addKey}
+        grayLetters={greenLetters}
+        yellowLetters={yellowLetters}
+        greenLetters={grayLetters}
+      />
     </View>
   );
 };

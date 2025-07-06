@@ -6,15 +6,21 @@ const WordleLayout = () => {
   const colorScheme = useColorScheme();
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="game"
         options={{
           headerShown: true,
-          headerBackTitle: "Home",
+          headerTitle: "",
+          headerBackTitle: "Wordle",
           headerTintColor: colorScheme === "dark" ? "#fff" : "#000",
           headerBackTitleStyle: {
-            fontSize: 16,
+            fontSize: 24,
             fontFamily: "FrankRuhlLibre_800ExtraBold",
           },
         }}

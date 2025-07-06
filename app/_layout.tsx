@@ -47,6 +47,7 @@ export default function RootLayout() {
                 name="(auth)"
                 options={{ presentation: "modal", headerShown: false }}
               />
+              <Stack.Screen name="wordle" options={{ headerShown: false }} />
             </Stack>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
