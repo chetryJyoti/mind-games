@@ -8,3 +8,4 @@
 - dark and light mode setup
 - bottom sheet subscribe 
 - clerk auth setup
+- on screen keyboard setup
