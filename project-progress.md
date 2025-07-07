@@ -10,4 +10,5 @@
 - clerk auth setup
 - on screen keyboard setup
 - game logic with target and all words
-- end screen for wordle game
+- end screen for wordle game 
+- bug end game screen router navigations doesnot work properly

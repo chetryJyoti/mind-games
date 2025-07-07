@@ -1,9 +1,9 @@
-import Logo from "@/assets/images/nyt-logo.svg";
+import Logo from "@/assets/images/mg-logo.png";
 import { Colors } from "@/constants/Colors";
 import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { Redirect, router, Stack } from "expo-router";
-import { TouchableOpacity } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 
 export default function AuthRoutesLayout() {
   const { isSignedIn } = useAuth();
@@ -20,7 +20,9 @@ export default function AuthRoutesLayout() {
         options={{
           presentation: "modal",
           headerShadowVisible: false,
-          headerTitle: () => <Logo width={150} height={40} />,
+          headerTitle: () => (
+            <Image source={Logo} style={{ width: 280, height: 30 }} />
+          ),
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()}>
               <Ionicons name="close" size={26} color={Colors.dark.gray} />
