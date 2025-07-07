@@ -1,6 +1,6 @@
 import Icon from "@/assets/images/wordle-icon.svg";
 import { Colors } from "@/constants/Colors";
-import { SignedOut } from "@clerk/clerk-expo";
+import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
@@ -63,6 +63,34 @@ const EndPage = () => {
             <Text style={styles.textLink}>Already have an account? Log in</Text>
           </TouchableOpacity>
         </SignedOut>
+        <SignedIn>
+          <Text style={styles.text}>Statistics</Text>
+          <View style={styles.stats}>
+            <View>
+              <Text style={styles.score}> {userScore.played}</Text>
+              <Text>Played</Text>
+            </View>
+            <View>
+              <Text style={styles.score}> {userScore.won}</Text>
+              <Text>Wins</Text>
+            </View>
+            <View>
+              <Text style={styles.score}> {userScore.currentStreak}</Text>
+              <Text>Current Streak</Text>
+            </View>
+          </View>
+        </SignedIn>
+        <View
+          style={{
+            width: "100%",
+            height: StyleSheet.hairlineWidth,
+            backgroundColor: "#4e4e4e",
+          }}
+        />
+        <TouchableOpacity onPress={shareGame} style={styles.shareBtn}>
+          <Text style={styles.btnText}>Share</Text>
+          <Ionicons name="share-social" size={24} color="#fff" s />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -102,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
   },
   btnText: {
-    padding: 10,
+    padding: 15,
     fontSize: 16,
     fontWeight: "bold",
     color: "#fff",
@@ -111,5 +139,25 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     fontSize: 16,
     paddingVertical: 14,
+  },
+  stats: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+    gap: 20,
+  },
+  score: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  shareBtn: {
+    marginVertical: 20,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.light.green,
+    borderRadius: 30,
+    width: "70%",
   },
 });
