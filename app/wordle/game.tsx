@@ -2,11 +2,11 @@ import OnScreenKeyboard from "@/components/OnScreenKeyboard";
 import { Colors } from "@/constants/Colors";
 import { allWords } from "@/utils/allWords";
 import { Ionicons } from "@expo/vector-icons";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, useColorScheme, View } from "react-native";
 
-const ROWS = 6;
+const ROWS = 1;
 
 const Game = () => {
   const colorScheme = useColorScheme();
@@ -99,9 +99,15 @@ const Game = () => {
       if (currentWord === word) {
         console.log("You guessed the word!");
         // todo: show success message and reset game
+        router.push(
+          `/wordle/end?win=true&word=${word}&gameField=${JSON.stringify(rows)}`
+        );
       } else if (currentRow + 1 >= ROWS) {
         console.log("Game over! You've used all attempts.");
         // todo: show failure message and reset game
+        router.push(
+          `/wordle/end?win=false&word=${word}&gameField=${JSON.stringify(rows)}`
+        );
       }
     }, 0);
 

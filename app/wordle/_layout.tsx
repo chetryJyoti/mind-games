@@ -25,6 +25,15 @@ const WordleLayout = () => {
           },
         }}
       />
+      <Stack.Screen
+        name="end"
+        options={{
+          headerShown: true,
+          headerTitle: "",
+          presentation: "fullScreenModal",
+          headerShadowVisible: false,
+        }}
+      />
     </Stack>
   );
 };

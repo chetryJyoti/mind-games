@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mind-games",
+    "name": "Mind Games",
     "slug": "mind-games",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -36,7 +36,8 @@
         }
       ],
       "expo-font",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-mail-composer"
     ],
     "experiments": {
       "typedRoutes": true
