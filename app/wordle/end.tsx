@@ -2,6 +2,7 @@ import Icon from "@/assets/images/wordle-icon.svg";
 import { Colors } from "@/constants/Colors";
 import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
+import * as MailComposer from "expo-mail-composer";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -21,6 +22,34 @@ const EndPage = () => {
 
   const shareGame = () => {
     // Implement share game logic here
+    console.log("Sharing game...");
+    const game = JSON.parse(gameField!);
+    const imageText: string[][] = [];
+
+    const wordLetters = word.split("");
+    game.forEach((row: string[]) => {
+      const rowText = row.map((letter, index) => {
+        if (letter === wordLetters[index]) {
+          return `\x1b[32m${letter}\x1b[0m`; // Green for correct letters
+        } else if (wordLetters.includes(letter)) {
+          return `\x1b[33m${letter}\x1b[0m`; // Yellow for present letters
+        } else {
+          return `\x1b[31m${letter}\x1b[0m`; // Red for incorrect letters
+        }
+      });
+      imageText.push(rowText);
+    });
+
+    const shareContent = `Wordle Game Result:\n\n${imageText
+      .map((row) => row.join(" "))
+      .join("\n")}\n\nWord: ${word}`;
+    console.log(shareContent);
+
+    MailComposer.composeAsync({
+      subject: "Wordle Game Result",
+      body: shareContent,
+      isHtml: false,
+    });
   };
 
   const restartGame = () => {

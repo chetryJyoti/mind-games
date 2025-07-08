@@ -6,7 +6,7 @@ import { router, Stack } from "expo-router";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, useColorScheme, View } from "react-native";
 
-const ROWS = 1;
+const ROWS = 6;
 
 const Game = () => {
   const colorScheme = useColorScheme();
