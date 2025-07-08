@@ -20,8 +20,12 @@ const EndPage = () => {
     currentStreak: 42,
   });
 
-  const shareGame = () => {
-    // Implement share game logic here
+  const shareGame = async () => {
+    const isAvailable = await MailComposer.isAvailableAsync();
+    if (!isAvailable) {
+      alert("Mail app is not available on this device.");
+      return;
+    }
     console.log("Sharing game...");
     const game = JSON.parse(gameField!);
     const imageText: string[][] = [];
@@ -45,11 +49,17 @@ const EndPage = () => {
       .join("\n")}\n\nWord: ${word}`;
     console.log(shareContent);
 
-    MailComposer.composeAsync({
-      subject: "Wordle Game Result",
-      body: shareContent,
-      isHtml: false,
-    });
+    try {
+      const result = await MailComposer.composeAsync({
+        subject: "Wordle Game Result",
+        body: shareContent,
+        isHtml: false,
+      });
+      console.log("MailComposer result:", result);
+    } catch (error) {
+      console.error("MailComposer error:", error);
+      alert("Failed to open mail composer.");
+    }
   };
 
   const restartGame = () => {
@@ -180,13 +190,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  shareBtn: {
-    marginVertical: 20,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.light.green,
-    borderRadius: 30,
-    width: "70%",
-  },
-});
+    shareBtn: {
+      marginVertical: 20,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: Colors.light.green,
+      borderRadius: 30,
+    },
+  })
