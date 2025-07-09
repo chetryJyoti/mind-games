@@ -100,13 +100,13 @@ const Game = () => {
         console.log("You guessed the word!");
         // todo: show success message and reset game
         router.push(
-          `/wordle/end?win=true&word=${word}&gameField=${JSON.stringify(rows)}`
+          `/wordle/end?won=true&word=${word}&gameField=${JSON.stringify(rows)}`
         );
       } else if (currentRow + 1 >= ROWS) {
         console.log("Game over! You've used all attempts.");
         // todo: show failure message and reset game
         router.push(
-          `/wordle/end?win=false&word=${word}&gameField=${JSON.stringify(rows)}`
+          `/wordle/end?won=false&word=${word}&gameField=${JSON.stringify(rows)}`
         );
       }
     }, 0);

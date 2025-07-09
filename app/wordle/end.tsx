@@ -1,24 +1,23 @@
 import Icon from "@/assets/images/wordle-icon.svg";
 import { Colors } from "@/constants/Colors";
-import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { FIRESTORE_DB } from "@/utils/FirebaseConfig";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import * as MailComposer from "expo-mail-composer";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const EndPage = () => {
-  const { win, word, gameField } = useLocalSearchParams<{
-    win: string;
+  const { user } = useUser();
+  const { won, word, gameField } = useLocalSearchParams<{
+    won: string;
     word: string;
     gameField?: string;
   }>();
 
-  const [userScore, setUserScore] = useState<any>({
-    played: 42,
-    won: 42,
-    currentStreak: 42,
-  });
+  const [userScore, setUserScore] = useState<any>({});
 
   const shareGame = async () => {
     const isAvailable = await MailComposer.isAvailableAsync();
@@ -67,6 +66,47 @@ const EndPage = () => {
     router.push("/wordle");
   };
 
+  useEffect(() => {
+    if (user) {
+      updateUserScore();
+    }
+  }, [user]);
+
+  const updateUserScore = async () => {
+    if (!user) return;
+    console.log("Updating user score...", user.id);
+
+    const docRef = doc(FIRESTORE_DB, `users/${user.id}/wordle/stats`);
+    const docSnap = await getDoc(docRef);
+
+    console.log("Document snapshot:", docSnap.exists(), docSnap.data());
+
+    let newScore = {
+      played: 1,
+      wins: won === "true" ? 1 : 0,
+      lastGame: won === "true" ? "won" : "lost",
+      currentStreak: won === "true" ? 1 : 0,
+    };
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      newScore = {
+        played: data.played + 1,
+        wins: data.wins + (won === "true" ? 1 : 0),
+        lastGame: won === "true" ? "won" : "lost",
+        currentStreak:
+          won === "true" && data.lastGame === "won"
+            ? data.currentStreak + 1
+            : won === "true"
+            ? 1
+            : 0,
+      };
+    }
+    console.log("New score to update:", newScore);
+    await setDoc(docRef, newScore, { merge: true });
+    setUserScore(newScore);
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -76,7 +116,7 @@ const EndPage = () => {
         <Ionicons name="close" size={32} color={Colors.light.gray} />
       </TouchableOpacity>
       <View style={styles.header}>
-        {win === "true" ? (
+        {won === "true" ? (
           <Image
             source={require("../../assets/images/win.png")}
             style={{ width: 80, height: 80 }}
@@ -85,7 +125,7 @@ const EndPage = () => {
           <Icon width={100} height={100} />
         )}
         <Text style={styles.headerText}>
-          {win === "true" ? "Congratulations" : "Thanks for playing today!"}
+          {won === "true" ? "Congratulations" : "Thanks for playing today!"}
         </Text>
         <SignedOut>
           <Text style={styles.text}>Want to see your stats and streaks?</Text>
@@ -109,7 +149,7 @@ const EndPage = () => {
               <Text>Played</Text>
             </View>
             <View>
-              <Text style={styles.score}> {userScore.won}</Text>
+              <Text style={styles.score}> {userScore.wins}</Text>
               <Text>Wins</Text>
             </View>
             <View>

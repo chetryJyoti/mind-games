@@ -2,7 +2,7 @@ import Logo from "@/assets/images/mg-logo.png";
 import { Colors } from "@/constants/Colors";
 import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
-import { Redirect, router, Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Image, TouchableOpacity } from "react-native";
 
 export default function AuthRoutesLayout() {
@@ -13,13 +13,17 @@ export default function AuthRoutesLayout() {
   // }
 
   return (
-    <Stack>
-      <Stack.Screen name="sign-up" options={{ presentation: "modal" }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="sign-up"
+        options={{ presentation: "modal", headerShown: false }}
+      />
       <Stack.Screen
         name="sign-in"
         options={{
           presentation: "modal",
           headerShadowVisible: false,
+          headerShown: false,
           headerTitle: () => (
             <Image source={Logo} style={{ width: 280, height: 30 }} />
           ),

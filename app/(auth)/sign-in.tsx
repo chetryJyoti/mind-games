@@ -15,7 +15,13 @@ import {
   View,
 } from "react-native";
 
-WebBrowser.warmUpAsync();
+try {
+  if (typeof WebBrowser.warmUpAsync === "function") {
+    WebBrowser.warmUpAsync();
+  }
+} catch (e) {
+  console.warn("WebBrowser.warmUpAsync is not available:", e);
+}
 
 const SignInPage = () => {
   const router = useRouter();
@@ -31,9 +37,14 @@ const SignInPage = () => {
           redirectUrl: AuthSession.makeRedirectUri({ useProxy: true }),
         });
 
+        if (!createdSessionId) {
+          console.error("No session created");
+          return;
+        }
+
         if (createdSessionId && setActive) {
           await setActive({ session: createdSessionId });
-          router.back(); 
+          router.back();
         }
       } catch (err) {
         console.error("OAuth error:", err);

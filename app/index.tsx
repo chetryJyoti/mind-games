@@ -1,7 +1,7 @@
 import Icon from "@/assets/images/wordle-icon.svg";
 import SubscribeModal from "@/components/SubscribeModal";
 import { Colors } from "@/constants/Colors";
-import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { SignedIn, SignedOut, useClerk } from "@clerk/clerk-expo";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import { useRef } from "react";
@@ -19,6 +19,7 @@ export default function Index() {
   const theme = Colors[colorScheme ?? "light"];
   const subscribeModalRef = useRef<BottomSheet>(null);
 
+  const { signOut } = useClerk();
   const handlePresentSubscribeModal = () =>
     subscribeModalRef.current?.present();
 
@@ -41,7 +42,7 @@ export default function Index() {
               styles.navBtn,
               { borderColor: theme.text, backgroundColor: theme.gameBg },
             ]}
-            onPress={() => router.push("/sign-in")}
+            onPress={() => router.push("/(auth)/sign-in")}
           >
             <Text style={[styles.navBtnText, { color: theme.text }]}>
               Login
@@ -54,6 +55,7 @@ export default function Index() {
               styles.navBtn,
               { borderColor: theme.text, backgroundColor: theme.gameBg },
             ]}
+            onPress={() => signOut()}
           >
             <Text style={[styles.navBtnText, { color: theme.text }]}>
               Log out
