@@ -30,7 +30,7 @@ const WordleLayout = () => {
         options={{
           headerShown: true,
           headerTitle: "",
-          presentation: "fullScreenModal",
+          presentation: "modal",
           headerShadowVisible: false,
         }}
       />

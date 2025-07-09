@@ -89,16 +89,15 @@ const EndPage = () => {
         </Text>
         <SignedOut>
           <Text style={styles.text}>Want to see your stats and streaks?</Text>
+
           <TouchableOpacity
-            onPress={() => {
-              console.log("Navigating to sign-up");
-              router.push("/sign-up");
-            }}
+            onPress={() => router.push("/(auth)/sign-up")}
             style={styles.btn}
           >
             <Text style={styles.btnText}>Create a free account</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.replace("/sign-in")}>
+
+          <TouchableOpacity onPress={() => router.push("/(auth)/sign-in")}>
             <Text style={styles.textLink}>Already have an account? Log in</Text>
           </TouchableOpacity>
         </SignedOut>
@@ -190,12 +189,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-    shareBtn: {
-      marginVertical: 20,
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: Colors.light.green,
-      borderRadius: 30,
-    },
-  })
+  shareBtn: {
+    marginVertical: 20,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.light.green,
+    borderRadius: 30,
+    width: "100%",
+  },
+});

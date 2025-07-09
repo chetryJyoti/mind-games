@@ -8,9 +8,9 @@ import { Image, TouchableOpacity } from "react-native";
 export default function AuthRoutesLayout() {
   const { isSignedIn } = useAuth();
 
-  if (isSignedIn) {
-    return <Redirect href={"/"} />;
-  }
+  // if (isSignedIn) {
+  //   return <Redirect href={"/"} />;
+  // }
 
   return (
     <Stack>
