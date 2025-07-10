@@ -1,10 +1,18 @@
 import OnScreenKeyboard from "@/components/OnScreenKeyboard";
+import WordleSettingsModal from "@/components/WordleSettingsModal";
 import { Colors } from "@/constants/Colors";
 import { allWords } from "@/utils/allWords";
 import { Ionicons } from "@expo/vector-icons";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { router, Stack } from "expo-router";
 import React, { useRef, useState } from "react";
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 
 const ROWS = 6;
 
@@ -24,11 +32,18 @@ const Game = () => {
   const [yellowLetters, setYellowLetters] = useState<string[]>([]);
   const [grayLetters, setGrayLetters] = useState<string[]>([]);
 
+  // todo uncomment this line to use random words
   // const [word, setWord] = useState<string>(words[Math.floor(Math.random() * words.length)]);
   const [word, setWord] = useState<string>("apple"); // For testing, set a fixed word
 
   const wordLetters = word.split("");
   // array of all letters in the word
+
+  const settingsModalRef = useRef<BottomSheetModal>(null);
+  const handlePresentSettingsModal = () => {
+    settingsModalRef.current?.present();
+  };
+  // const gameFieldRef = useRef(null);
 
   const columnStateRef = useRef(currentColumn);
 
@@ -140,6 +155,7 @@ const Game = () => {
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
+      <WordleSettingsModal ref={settingsModalRef} />
       <Stack.Screen
         options={{
           headerRight: () => (
@@ -150,7 +166,9 @@ const Game = () => {
                 color={textColor}
               />
               <Ionicons name="podium-outline" size={24} color={textColor} />
-              <Ionicons name="settings-sharp" size={24} color={textColor} />
+              <TouchableOpacity onPress={handlePresentSettingsModal}>
+                <Ionicons name="settings-sharp" size={24} color={textColor} />
+              </TouchableOpacity>
             </View>
           ),
         }}
