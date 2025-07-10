@@ -14,3 +14,5 @@
 - bug end game screen router navigations doesnot work properly
 - interesting bug with clerk: if you have enabled username and makred it as required then you have to pass it or else user session won't be created
 - firebase configurations setup and stats mapping in db
+- if using expo .env variables for firbase configs then there is some unexpected errors.
+- add mmkv-storage

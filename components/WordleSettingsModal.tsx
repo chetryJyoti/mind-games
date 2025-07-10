@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import { useTheme } from "@/hooks/useTheme";
 import { storage } from "@/utils/storage";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -8,21 +9,12 @@ import {
   useBottomSheetModal,
 } from "@gorhom/bottom-sheet";
 import React, { forwardRef, useCallback, useMemo } from "react";
-import {
-  StyleSheet,
-  Switch,
-  Text,
-  TouchableOpacity,
-  View,
-  useColorScheme,
-} from "react-native";
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import { useMMKVBoolean } from "react-native-mmkv";
 
 export type Ref = BottomSheetModal;
 
 const WordleSettingsModal = forwardRef<Ref>((props, ref) => {
-  const colorScheme = useColorScheme();
-  const theme = Colors[colorScheme ?? "light"];
   const snapPoints = useMemo(() => ["50%"], []);
   const { dismiss } = useBottomSheetModal();
 
@@ -31,9 +23,8 @@ const WordleSettingsModal = forwardRef<Ref>((props, ref) => {
     "highContrastMode",
     storage
   );
-  const [darkMode, setDarkMode] = useMMKVBoolean("darkMode", storage);
+  const { isDarkMode, toggleDarkMode } = useTheme();
 
-  const toggleDarkMode = () => setDarkMode((prev) => !!!prev);
   const toggleHardMode = () => setHardMode((prev) => !!!prev);
   const toggleHighContrastMode = () => setHighContrastMode((prev) => !!!prev);
 
@@ -50,6 +41,8 @@ const WordleSettingsModal = forwardRef<Ref>((props, ref) => {
     [dismiss]
   );
 
+  const theme = Colors[isDarkMode ? "dark" : "light"];
+
   return (
     <BottomSheetModal
       ref={ref}
@@ -62,18 +55,15 @@ const WordleSettingsModal = forwardRef<Ref>((props, ref) => {
         style={[styles.contentContainer, { backgroundColor: theme.background }]}
       >
         <View style={styles.modalBtns}>
-          <Text style={[styles.containerHeadline, { color: theme.text }]}>
-            SETTINGS
-          </Text>
+          <Text style={[styles.containerHeadline]}>SETTINGS</Text>
           <TouchableOpacity onPress={() => dismiss()}>
-            <Ionicons name="close" size={28} color={theme.text} />
+            <Ionicons name="close" size={28} />
           </TouchableOpacity>
         </View>
 
         <View style={{ flex: 1 }}>
           <BottomSheetScrollView>
             <View style={styles.settingsContent}>
-              {/* Dark Mode Row */}
               <View style={styles.settingRow}>
                 <View style={styles.textContainer}>
                   <Text style={[styles.rowTextBig, { color: theme.text }]}>
@@ -84,14 +74,13 @@ const WordleSettingsModal = forwardRef<Ref>((props, ref) => {
                   </Text>
                 </View>
                 <Switch
-                  value={darkMode}
+                  value={isDarkMode}
                   onValueChange={toggleDarkMode}
                   trackColor={{ true: "#000" }}
                   ios_backgroundColor="#9a9a9a"
                 />
               </View>
 
-              {/* Hard Mode Row */}
               <View style={styles.settingRow}>
                 <View style={styles.textContainer}>
                   <Text style={[styles.rowTextBig, { color: theme.text }]}>
@@ -109,7 +98,6 @@ const WordleSettingsModal = forwardRef<Ref>((props, ref) => {
                 />
               </View>
 
-              {/* High Contrast Mode Row */}
               <View style={styles.settingRow}>
                 <View style={styles.textContainer}>
                   <Text style={[styles.rowTextBig, { color: theme.text }]}>

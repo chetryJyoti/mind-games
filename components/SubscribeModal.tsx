@@ -16,7 +16,6 @@ import {
   useColorScheme,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 import { Colors } from "@/constants/Colors";
 import disc from "@jsamr/counter-style/presets/disc";
 import MarkedList from "@jsamr/react-native-li";
@@ -138,7 +137,7 @@ SubscribeModal.displayName = "SubscribeModal";
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    justifyContent: "space-between", // Add this
+    justifyContent: "space-between", 
   },
 
   containerHeadline: {
