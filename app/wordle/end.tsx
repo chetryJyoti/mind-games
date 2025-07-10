@@ -19,48 +19,70 @@ const EndPage = () => {
 
   const [userScore, setUserScore] = useState<any>({});
 
-  const shareGame = async () => {
-    const isAvailable = await MailComposer.isAvailableAsync();
-    if (!isAvailable) {
-      alert("Mail app is not available on this device.");
-      return;
-    }
-    console.log("Sharing game...");
+  const shareGame = () => {
     const game = JSON.parse(gameField!);
     const imageText: string[][] = [];
 
     const wordLetters = word.split("");
-    game.forEach((row: string[]) => {
-      const rowText = row.map((letter, index) => {
+
+    game.forEach((row: [], rowIndex: number) => {
+      imageText.push([]);
+      row.forEach((letter, index) => {
         if (letter === wordLetters[index]) {
-          return `\x1b[32m${letter}\x1b[0m`; // Green for correct letters
+          imageText[rowIndex].push("🟩");
         } else if (wordLetters.includes(letter)) {
-          return `\x1b[33m${letter}\x1b[0m`; // Yellow for present letters
+          imageText[rowIndex].push("🟨");
         } else {
-          return `\x1b[31m${letter}\x1b[0m`; // Red for incorrect letters
+          imageText[rowIndex].push("⬜");
         }
       });
-      imageText.push(rowText);
     });
 
-    const shareContent = `Wordle Game Result:\n\n${imageText
-      .map((row) => row.join(" "))
-      .join("\n")}\n\nWord: ${word}`;
-    console.log(shareContent);
+    const html = `
+      <html>
+        <head>
+          <style>
 
-    try {
-      const result = await MailComposer.composeAsync({
-        subject: "Wordle Game Result",
-        body: shareContent,
-        isHtml: false,
-      });
-      console.log("MailComposer result:", result);
-    } catch (error) {
-      console.error("MailComposer error:", error);
-      alert("Failed to open mail composer.");
-    }
+            .game {
+              display: flex;
+              flex-direction: column;
+            }
+              .row {
+              display: flex;
+              flex-direction: row;
+
+              }
+            .cell {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+
+          </style>
+        </head>
+        <body>
+          <h1>Wordle</h1>
+          <div class="game">
+           ${imageText
+             .map(
+               (row) =>
+                 `<div class="row">${row
+                   .map((cell) => `<div class="cell">${cell}</div>`)
+                   .join("")}</div>`
+             )
+             .join("")}
+          </div>
+        </body>
+      </html>
+    `;
+
+    MailComposer.composeAsync({
+      subject: `I just played Wordle!`,
+      body: html,
+      isHtml: true,
+    });
   };
-
+  
   const restartGame = () => {
     router.dismiss();
     router.push("/wordle");
