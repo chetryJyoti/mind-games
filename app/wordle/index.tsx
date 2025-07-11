@@ -10,6 +10,10 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function WordlePage() {
   const colorScheme = useColorScheme();
@@ -27,28 +31,29 @@ export default function WordlePage() {
         <Text style={styles.logo}>MindGames</Text>
         <Text></Text>
       </View>
-      <View style={styles.content}>
+      <Animated.View style={styles.content} entering={FadeInDown.delay(100)}>
         <Icon width={100} height={100} style={styles.icon} />
         <Text style={[styles.title, { color: theme.text }]}>Wordle</Text>
         <Text style={[styles.subTitle, { color: theme.text }]}>
           Get 6 chances to guess a 5-letter word.
         </Text>
+      </Animated.View>
 
-        <TouchableOpacity
-          style={[
-            styles.btn,
-            {
-              borderColor: theme.text,
-              backgroundColor: theme.gameBg,
-            },
-          ]}
-          onPress={() => router.push("/wordle/game")}
-        >
-          <Text style={[styles.btnText, { color: theme.text }]}>Play</Text>
-        </TouchableOpacity>
-      </View>
+      <AnimatedTouchableOpacity
+        style={[
+          styles.btn,
+          {
+            borderColor: theme.text,
+            backgroundColor: theme.gameBg,
+          },
+        ]}
+        onPress={() => router.push("/wordle/game")}
+        entering={FadeInUp.delay(100)}
+      >
+        <Text style={[styles.btnText, { color: theme.text }]}>Play</Text>
+      </AnimatedTouchableOpacity>
 
-      <View style={styles.footer}>
+      <Animated.View style={styles.footer} entering={FadeInDown.delay(200)}>
         <Text
           style={[styles.footerText, { color: theme.text, fontWeight: "bold" }]}
         >
@@ -61,7 +66,7 @@ export default function WordlePage() {
         <Text style={[styles.footerText, { color: theme.text }]}>
           Edited by JC
         </Text>
-      </View>
+      </Animated.View>
     </View>
   );
 }

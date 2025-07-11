@@ -55,9 +55,11 @@ const WordleSettingsModal = forwardRef<Ref>((props, ref) => {
         style={[styles.contentContainer, { backgroundColor: theme.background }]}
       >
         <View style={styles.modalBtns}>
-          <Text style={[styles.containerHeadline]}>SETTINGS</Text>
+          <Text style={[styles.containerHeadline, { color: theme.text }]}>
+            SETTINGS
+          </Text>
           <TouchableOpacity onPress={() => dismiss()}>
-            <Ionicons name="close" size={28} />
+            <Ionicons name="close" size={28} style={{ color: theme.text }} />
           </TouchableOpacity>
         </View>
 

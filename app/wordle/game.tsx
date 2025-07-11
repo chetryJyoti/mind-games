@@ -13,43 +13,110 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+  ZoomIn,
+} from "react-native-reanimated";
 
 const ROWS = 6;
 
 const Game = () => {
   const colorScheme = useColorScheme();
-  const backgroundColor = Colors[colorScheme ?? "light"].gameBg;
-  const textColor = Colors[colorScheme ?? "light"].text;
-  const grayColor = Colors[colorScheme ?? "light"].gray;
 
+  // ✅ Declare all shared values at the top level
+  const shakeOffset0 = useSharedValue(0);
+  const shakeOffset1 = useSharedValue(0);
+  const shakeOffset2 = useSharedValue(0);
+  const shakeOffset3 = useSharedValue(0);
+  const shakeOffset4 = useSharedValue(0);
+  const shakeOffset5 = useSharedValue(0);
+
+  // ✅ Declare all animated styles at the top level
+  const rowStyle0 = useAnimatedStyle(() => ({
+    transform: [{ translateX: shakeOffset0.value }],
+  }));
+  const rowStyle1 = useAnimatedStyle(() => ({
+    transform: [{ translateX: shakeOffset1.value }],
+  }));
+  const rowStyle2 = useAnimatedStyle(() => ({
+    transform: [{ translateX: shakeOffset2.value }],
+  }));
+  const rowStyle3 = useAnimatedStyle(() => ({
+    transform: [{ translateX: shakeOffset3.value }],
+  }));
+  const rowStyle4 = useAnimatedStyle(() => ({
+    transform: [{ translateX: shakeOffset4.value }],
+  }));
+  const rowStyle5 = useAnimatedStyle(() => ({
+    transform: [{ translateX: shakeOffset5.value }],
+  }));
+
+  // ✅ State hooks
   const [rows, setRows] = useState<string[][]>(
     new Array(ROWS).fill(new Array(5).fill(""))
   );
   const [currentRow, setCurrentRow] = useState(0);
   const [currentColumn, _setCurrentColumn] = useState(0);
-
   const [greenLetters, setGreenLetters] = useState<string[]>([]);
   const [yellowLetters, setYellowLetters] = useState<string[]>([]);
   const [grayLetters, setGrayLetters] = useState<string[]>([]);
-
-  // todo uncomment this line to use random words
-  // const [word, setWord] = useState<string>(words[Math.floor(Math.random() * words.length)]);
   const [word, setWord] = useState<string>("apple"); // For testing, set a fixed word
 
-  const wordLetters = word.split("");
-  // array of all letters in the word
-
+  // ✅ Refs
   const settingsModalRef = useRef<BottomSheetModal>(null);
+  const columnStateRef = useRef(currentColumn);
+
+  // ✅ Now declare non-hook variables
+  const backgroundColor = Colors[colorScheme ?? "light"].gameBg;
+  const textColor = Colors[colorScheme ?? "light"].text;
+  const grayColor = Colors[colorScheme ?? "light"].gray;
+  const wordLetters = word.split("");
+
+  // ✅ Arrays for animation
+  const offsetShakes = [
+    shakeOffset0,
+    shakeOffset1,
+    shakeOffset2,
+    shakeOffset3,
+    shakeOffset4,
+    shakeOffset5,
+  ];
+  const rowStyles = [
+    rowStyle0,
+    rowStyle1,
+    rowStyle2,
+    rowStyle3,
+    rowStyle4,
+    rowStyle5,
+  ];
+
+  // ✅ Functions
   const handlePresentSettingsModal = () => {
     settingsModalRef.current?.present();
   };
-  // const gameFieldRef = useRef(null);
-
-  const columnStateRef = useRef(currentColumn);
 
   const setCurrentColumn = (value: number) => {
     columnStateRef.current = value;
     _setCurrentColumn(value);
+  };
+
+  const shakeRow = (rowIndex: number) => {
+    const TIME = 100;
+    const OFFSET = 15;
+
+    console.log("Shaking row:", rowIndex);
+
+    if (rowIndex >= 0 && rowIndex < offsetShakes.length) {
+      offsetShakes[rowIndex].value = withSequence(
+        withTiming(-OFFSET, { duration: TIME / 2 }),
+        withRepeat(withTiming(OFFSET, { duration: TIME }), 4, true),
+        withTiming(0, { duration: TIME / 2 })
+      );
+    }
   };
 
   const addKey = (key: string) => {
@@ -81,14 +148,14 @@ const Game = () => {
   const checkWord = () => {
     const currentWord = rows[currentRow].join("");
     console.log(`Checking word: ${rows[currentRow].join("")}`);
+
     if (currentWord.length < word.length) {
-      console.log("Not enough letters to check the word.");
-      //todo
+      shakeRow(currentRow);
       return;
     }
+
     if (!allWords.includes(currentWord)) {
-      console.log("Word not found in the dictionary.");
-      //todo
+      shakeRow(currentRow);
       // return;
     }
 
@@ -113,13 +180,11 @@ const Game = () => {
     setTimeout(() => {
       if (currentWord === word) {
         console.log("You guessed the word!");
-        // todo: show success message and reset game
         router.push(
           `/wordle/end?won=true&word=${word}&gameField=${JSON.stringify(rows)}`
         );
       } else if (currentRow + 1 >= ROWS) {
         console.log("Game over! You've used all attempts.");
-        // todo: show failure message and reset game
         router.push(
           `/wordle/end?won=false&word=${word}&gameField=${JSON.stringify(rows)}`
         );
@@ -175,9 +240,13 @@ const Game = () => {
       />
       <View style={styles.gameField}>
         {rows.map((row, rowIndex) => (
-          <View style={styles.gameFieldRow} key={`row-${rowIndex}`}>
+          <Animated.View
+            style={[styles.gameFieldRow, rowStyles[rowIndex]]}
+            key={`row-${rowIndex}`}
+          >
             {row.map((cell, cellIndex) => (
-              <View
+              <Animated.View
+                entering={ZoomIn.delay(50 * cellIndex)}
                 style={[
                   styles.cell,
                   {
@@ -195,9 +264,9 @@ const Game = () => {
                 >
                   {cell}
                 </Text>
-              </View>
+              </Animated.View>
             ))}
-          </View>
+          </Animated.View>
         ))}
       </View>
       <OnScreenKeyboard
