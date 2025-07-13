@@ -16,6 +16,7 @@ import {
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withRepeat,
   withSequence,
   withTiming,
@@ -159,6 +160,8 @@ const Game = () => {
       // return;
     }
 
+    flipRow();
+
     const newGreenLetters: string[] = [];
     const newYellowLetters: string[] = [];
     const newGrayLetters: string[] = [];
@@ -189,7 +192,7 @@ const Game = () => {
           `/wordle/end?won=false&word=${word}&gameField=${JSON.stringify(rows)}`
         );
       }
-    }, 0);
+    }, 1500);
 
     setCurrentRow(currentRow + 1);
     setCurrentColumn(0);
@@ -216,6 +219,48 @@ const Game = () => {
       return getCellColor(cell, rowIndex, cellIndex);
     }
     return Colors.light.gray;
+  };
+
+  //Flip animation
+  const tilesRotates = Array.from({ length: ROWS }, () =>
+    Array.from({ length: 5 }, () => useSharedValue(0))
+  );
+
+  const cellBackgrounds = Array.from({ length: ROWS }, () =>
+    Array.from({ length: 5 }, () => useSharedValue("transparent"))
+  );
+
+  const cellBorders = Array.from({ length: ROWS }, () =>
+    Array.from({ length: 5 }, () => useSharedValue(Colors.light.gray))
+  );
+
+  const titleStyles = Array.from({ length: ROWS }, (_, rowIndex) =>
+    Array.from({ length: 5 }, (_, tileIndex) =>
+      useAnimatedStyle(() => {
+        return {
+          transform: [
+            { rotateX: `${tilesRotates[rowIndex][tileIndex].value}deg` },
+          ],
+          backgroundColor: cellBackgrounds[rowIndex][tileIndex].value,
+          borderColor: cellBorders[rowIndex][tileIndex].value,
+        };
+      })
+    )
+  );
+
+  const flipRow = () => {
+    const TIME = 300;
+    const OFFSET = 90;
+
+    tilesRotates[currentRow].forEach((titleStyle, index) => {
+      titleStyle.value = withDelay(
+        index * 100,
+        withSequence(
+          withTiming(OFFSET, { duration: TIME }),
+          withTiming(0, { duration: TIME })
+        )
+      );
+    });
   };
 
   return (
@@ -249,10 +294,11 @@ const Game = () => {
                 entering={ZoomIn.delay(50 * cellIndex)}
                 style={[
                   styles.cell,
-                  {
-                    backgroundColor: getCellColor(cell, rowIndex, cellIndex),
-                    borderColor: getBorderColor(cell, rowIndex, cellIndex),
-                  },
+                  // {
+                  //   backgroundColor: getCellColor(cell, rowIndex, cellIndex),
+                  //   borderColor: getBorderColor(cell, rowIndex, cellIndex),
+                  // },
+                  titleStyles[rowIndex][cellIndex],
                 ]}
                 key={`cell-${rowIndex}-${cellIndex}`}
               >
