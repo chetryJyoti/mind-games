@@ -5,7 +5,7 @@ import { allWords } from "@/utils/allWords";
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { router, Stack } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -28,7 +28,7 @@ const ROWS = 6;
 const Game = () => {
   const colorScheme = useColorScheme();
 
-  // ✅ Declare all shared values at the top level
+  //  Declare all shared values at the top level
   const shakeOffset0 = useSharedValue(0);
   const shakeOffset1 = useSharedValue(0);
   const shakeOffset2 = useSharedValue(0);
@@ -36,7 +36,7 @@ const Game = () => {
   const shakeOffset4 = useSharedValue(0);
   const shakeOffset5 = useSharedValue(0);
 
-  // ✅ Declare all animated styles at the top level
+  //  Declare all animated styles at the top level
   const rowStyle0 = useAnimatedStyle(() => ({
     transform: [{ translateX: shakeOffset0.value }],
   }));
@@ -56,7 +56,7 @@ const Game = () => {
     transform: [{ translateX: shakeOffset5.value }],
   }));
 
-  // ✅ State hooks
+  // State hooks
   const [rows, setRows] = useState<string[][]>(
     new Array(ROWS).fill(new Array(5).fill(""))
   );
@@ -67,17 +67,17 @@ const Game = () => {
   const [grayLetters, setGrayLetters] = useState<string[]>([]);
   const [word, setWord] = useState<string>("apple"); // For testing, set a fixed word
 
-  // ✅ Refs
+  //  Refs
   const settingsModalRef = useRef<BottomSheetModal>(null);
   const columnStateRef = useRef(currentColumn);
 
-  // ✅ Now declare non-hook variables
+  //  Now declare non-hook variables
   const backgroundColor = Colors[colorScheme ?? "light"].gameBg;
   const textColor = Colors[colorScheme ?? "light"].text;
   const grayColor = Colors[colorScheme ?? "light"].gray;
   const wordLetters = word.split("");
 
-  // ✅ Arrays for animation
+  //  Arrays for animation
   const offsetShakes = [
     shakeOffset0,
     shakeOffset1,
@@ -95,7 +95,7 @@ const Game = () => {
     rowStyle5,
   ];
 
-  // ✅ Functions
+  // Functions
   const handlePresentSettingsModal = () => {
     settingsModalRef.current?.present();
   };
@@ -109,8 +109,6 @@ const Game = () => {
     const TIME = 100;
     const OFFSET = 15;
 
-    console.log("Shaking row:", rowIndex);
-
     if (rowIndex >= 0 && rowIndex < offsetShakes.length) {
       offsetShakes[rowIndex].value = withSequence(
         withTiming(-OFFSET, { duration: TIME / 2 }),
@@ -121,7 +119,6 @@ const Game = () => {
   };
 
   const addKey = (key: string) => {
-    console.log(`Adding key: ${key}`);
 
     const newRows = [...rows].map((row) => [...row]); // Create a copy of the rows
 
@@ -148,7 +145,6 @@ const Game = () => {
 
   const checkWord = () => {
     const currentWord = rows[currentRow].join("");
-    console.log(`Checking word: ${rows[currentRow].join("")}`);
 
     if (currentWord.length < word.length) {
       shakeRow(currentRow);
@@ -182,12 +178,10 @@ const Game = () => {
 
     setTimeout(() => {
       if (currentWord === word) {
-        console.log("You guessed the word!");
         router.push(
           `/wordle/end?won=true&word=${word}&gameField=${JSON.stringify(rows)}`
         );
       } else if (currentRow + 1 >= ROWS) {
-        console.log("Game over! You've used all attempts.");
         router.push(
           `/wordle/end?won=false&word=${word}&gameField=${JSON.stringify(rows)}`
         );
@@ -196,29 +190,6 @@ const Game = () => {
 
     setCurrentRow(currentRow + 1);
     setCurrentColumn(0);
-  };
-
-  const getCellColor = (cell: string, rowIndex: number, cellIndex: number) => {
-    if (currentRow > rowIndex) {
-      if (wordLetters[cellIndex] === cell) {
-        return Colors.light.green;
-      } else if (wordLetters.includes(cell)) {
-        return Colors.light.yellow;
-      }
-      return grayColor;
-    }
-    return "transparent";
-  };
-
-  const getBorderColor = (
-    cell: string,
-    rowIndex: number,
-    cellIndex: number
-  ) => {
-    if (currentRow > rowIndex && cell !== "") {
-      return getCellColor(cell, rowIndex, cellIndex);
-    }
-    return Colors.light.gray;
   };
 
   //Flip animation
@@ -262,6 +233,51 @@ const Game = () => {
       );
     });
   };
+
+  const setCellColor = (cell: string, rowIndex: number, cellIndex: number) => {
+    if (currentRow > rowIndex) {
+      if (wordLetters[cellIndex] === cell) {
+        cellBackgrounds[rowIndex][cellIndex].value = withDelay(
+          cellIndex * 200,
+          withTiming(Colors.light.green)
+        );
+      } else if (wordLetters.includes(cell)) {
+        cellBackgrounds[rowIndex][cellIndex].value = cellBackgrounds[rowIndex][
+          cellIndex
+        ].value = withDelay(cellIndex * 200, withTiming(Colors.light.yellow));
+      } else {
+        cellBackgrounds[rowIndex][cellIndex].value = withDelay(
+          cellIndex * 200,
+          withTiming(grayColor)
+        );
+      }
+    } else {
+      return (cellBackgrounds[rowIndex][cellIndex].value = withTiming(
+        "transparent",
+        { duration: 100 }
+      ));
+    }
+  };
+
+  const setBorderColor = (
+    cell: string,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
+    if (currentRow > rowIndex && cell !== "") {
+      return setCellColor(cell, rowIndex, cellIndex);
+    }
+    return Colors.light.gray;
+  };
+
+  useEffect(() => {
+    if (currentRow === 0) return;
+
+    rows[currentRow - 1].map((cell, cellIndex) => {
+      setCellColor(cell, currentRow - 1, cellIndex);
+      setBorderColor(cell, currentRow - 1, cellIndex);
+    });
+  }, [currentRow]);
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
