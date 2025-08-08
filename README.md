@@ -21,7 +21,8 @@ Mind Games is a mobile app featuring various mental challenges and puzzle games 
 
 ## Games
 
-- Wordle (Under development)
+- Wordle
+- More games comming soon
 
 ### Current
 
